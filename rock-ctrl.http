@@ -1,0 +1,6 @@
+@rock_ctrl_HostAddress = http://localhost:5113
+
+GET {{rock_ctrl_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
