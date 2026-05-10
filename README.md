@@ -7,7 +7,7 @@ Simple Rocket Launch Control Center. This is a back-end server that consumes roc
 To run the application:
 
 ```bash
-dotnet run dotnet run ./rock-ctrl.csproj
+dotnet run ./rock-ctrl.csproj
 ```
 
 # Configurations
