@@ -2,7 +2,7 @@ using Confluent.Kafka;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using rock_ctrl.Hubs;
-using rock_ctrl.Models;
+using rock_ctrl.Configurations;
 
 namespace rock_ctrl.Services;
 
@@ -36,7 +36,9 @@ public class KafkaConsumerService : BackgroundService
 
     private async Task ConsumeLoop(CancellationToken cancellationToken)
     {
-        using var consumer = new ConsumerBuilder<string, string>(_kafkaConsumerConfig).Build();
+        using var consumer = new ConsumerBuilder<string, byte[]>(_kafkaConsumerConfig)
+            .SetValueDeserializer(Deserializers.ByteArray)
+            .Build();
         consumer.Subscribe(_kafkaSettings.Topic);
 
         try
@@ -48,10 +50,13 @@ public class KafkaConsumerService : BackgroundService
                     var consumeRes = consumer.Consume(TimeSpan.FromSeconds(3));
                     if (consumeRes == null)
                         continue;
-                    
-                    _logger.LogInformation("Consumed message: {msg}", consumeRes.Message.Value);
-                    
-                    await _telemetryHubCtx.Clients.All.SendAsync("NavigationMsg", consumeRes.Message.Value, cancellationToken);
+
+                    _logger.LogInformation("Consumed message - key: {key}", consumeRes.Message.Key);
+
+                    await _telemetryHubCtx.Clients.All.SendAsync(
+                        "TelemetryMsg",
+                        Rocket.Protos.Telemetry.Parser.ParseFrom(consumeRes.Message.Value),
+                        cancellationToken);
                 }
                 catch (ConsumeException e)
                 {

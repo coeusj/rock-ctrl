@@ -1,4 +1,4 @@
-namespace rock_ctrl.Models;
+namespace rock_ctrl.Configurations;
 
 public record KafkaSettings
 {
