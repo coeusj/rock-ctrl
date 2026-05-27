@@ -1,6 +1,6 @@
 # Rocket Control Center
 
-Simple Rocket Launch Control Center. This is a back-end server that consumes rocket telemetry in a Kafka topic and send's the received data to the connected clients via SignalR.
+Simple Rocket Launch Control Center. This is a back-end server that consumes rocket telemetry in a Kafka topic and sends the received data to the connected clients via SignalR.
 
 # Run
 
